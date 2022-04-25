@@ -77,7 +77,7 @@
 % lambda = 2;
 % w_angle = -20;
 % w = exp(-1i*2*pi/lambda*1*sind(w_angle)).^(0:5)';
-% [theta,E] = rt.array_pattern(shape,lambda,w);
+% [theta,E] = array_pattern(shape,lambda,w);
 % figure(2)
 % plot(theta,pow2db(abs(E).^2));grid on;
 %--------------------------------------------------------------------------
