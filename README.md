@@ -11,7 +11,7 @@
 如要要用雷达信号处理工具箱 例如+sp,将 "+sp"文件夹放在调用目录下.运行时命令直接输入 sp.[函数名] 即可
 
 
-## Radar Toolbox(sp)
+## Radar Toolbox
 |函数名|说明|
 |---|---|
 |ad_analyzer                |ADC性能分析工具(仍然需要完善，功能不全)
@@ -56,13 +56,13 @@
 |nm                         |单纯型优化算法，等价于matlab自带的fminsearch
 |pso                        |粒子群优化算法，等价于matlab自带的particleswarm
 
-## Optimization Toolbox(ot)
+## Optimization Toolbox
 |函数名|说明|
 |---|---|
 |nm                         |单纯型优化算法，等价于matlab自带的fminsearch
 |pso                        |粒子群优化算法，等价于matlab自带的particleswarm
 
-## Camera Toolbox(ct)
+## Camera Toolbox
 |函数名|说明|
 |---|---|
 |fov2vector                 |相机的fov角度转换为光路的矢量坐标系
