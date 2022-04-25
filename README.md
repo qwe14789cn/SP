@@ -53,3 +53,5 @@
 |word                       |正交投影加宽零陷抗干扰
 |write_bin                  |写入bin文件数据
 |write_data                 |写入matrix 数据 到 *.txt 或者 *.dat 格式
+|nm                         |单纯型优化算法，等价于matlab自带的fminsearch
+|pso                        |粒子群优化算法，等价于matlab自带的particleswarm
