@@ -19,7 +19,7 @@
 %   lambda = 1;                                                             %波长
 %   dd = lambda/2;                                                          %阵元间距d = lambda/2
 %   d = 0:dd:(N-1)*dd;                                                      %构建阵列坐标
-%   W= AntiJam( 64, 0,@taylorwin, lambda, d, theta_jam);                    %生成权系数
+%   W= word( 64, 0,@taylorwin, lambda, d, theta_jam);                       %生成权系数
 %--------------------------------------------------------------------------
 function  W = word(N, theta_tgt, window_N, lamda, position, theta_jam)
 %--------------------------------------------------------------------------

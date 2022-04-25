@@ -18,9 +18,9 @@
 %   waveform = phased.FMCWWaveform('SweepTime',T,'SweepBandwidth',bw,...
 %              'SampleRate',fs,'SweepInterval','Symmetric');
 %   sig = step(waveform);
-%   rt.pcf(sig,[-5e6 5e6],fs,Nfft);
+%   pc_factor(sig,[-5e6 5e6],fs,Nfft);
 %   Лђеп
-%   rt.pcf(sig,[-5e6 5e6],fs,Nfft,@(x)chebwin(x,100))
+%   pc_factor(sig,[-5e6 5e6],fs,Nfft,@(x)chebwin(x,100))
 %--------------------------------------------------------------------------
 function pc_f = pc_factor(temple_sig,bw_range,fs,Nfft,window_fun)
 if isreal(temple_sig)

@@ -9,7 +9,7 @@
 %           package_size        数据包大小格式
 %--------------------------------------------------------------------------
 %   例子：
-%   R = rt.udp_Rx(1234,[10,5])
+%   R = udp_Rx(1234,[10,5])
 %--------------------------------------------------------------------------
 function Received = udp_Rx(port,package_size)
 udpRx = dsp.UDPReceiver('MessageDataType','uint8');

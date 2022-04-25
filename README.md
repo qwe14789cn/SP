@@ -55,3 +55,26 @@
 |write_data                 |写入matrix 数据 到 *.txt 或者 *.dat 格式
 |nm                         |单纯型优化算法，等价于matlab自带的fminsearch
 |pso                        |粒子群优化算法，等价于matlab自带的particleswarm
+
+## Optimization Toolbox(ot)
+|函数名|说明|
+|---|---|
+|nm                         |单纯型优化算法，等价于matlab自带的fminsearch
+|pso                        |粒子群优化算法，等价于matlab自带的particleswarm
+
+## Camera Toolbox(ct)
+|函数名|说明|
+|---|---|
+|fov2vector                 |相机的fov角度转换为光路的矢量坐标系
+|picking                    |判断射线与三角形面是否有交点
+|pixel2vector               |小数像素转换光线的vector相对于相机坐标系
+|points2plane               |最小二乘法从点集合求解平面方程
+|ray_plane_intersection     |计算射线与平面的交点以及射线的距离
+|rotate_2d                  |二维向量旋转矩阵,对列向量左乘进行旋转操作
+|rotate_ad                  |绕着某个轴旋转特定角度的旋转矩阵
+|rotate_xd                  |绕X方向的旋转矩阵
+|rotate_yd                  |绕Y方向的旋转矩阵
+|rotate_zd                  |绕Z方向的旋转矩阵
+|show_vector                |二维与三维列向量可视化
+|undistortImage2            |图像畸变矫正还原(张正友畸变还原算法)
+|vector_angle               |计算两个矢量的夹角

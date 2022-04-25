@@ -20,7 +20,7 @@
 % 
 % tgt_pos = [R.*cosd(tgt_angle);R.*sind(tgt_angle);zeros(1,3)]; 
 % radar_pos = [zeros(1,8);lambda/2*(1:8)-4*lambda/2 - lambda/4;zeros(1,8)];
-% rt.steering_vector(radar_pos,tgt_pos(:,1),lambda)
+% steering_vector(radar_pos,tgt_pos(:,1),lambda)
 %--------------------------------------------------------------------------
 function A = steering_vector(array_pos,sig_pos,lambda)
 for idx = 1:size(array_pos,2)

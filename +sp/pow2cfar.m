@@ -20,7 +20,7 @@
 %   ¡ò   ÅÐ¾ö¼ì²â
 %--------------------------------------------------------------------------
 %   Àý×Ó£º
-%   [detected,th] = rt.p2cfar(datain,pfa,train_N,guard_N)
+%   [detected,th] = p2cfar(datain,pfa,train_N,guard_N)
 %--------------------------------------------------------------------------
 function [detected,th] = pow2cfar(datain,pfa,guard_N,train_N)
 cfar = phased.CFARDetector('NumTrainingCells',train_N*2,'NumGuardCells',guard_N*2);

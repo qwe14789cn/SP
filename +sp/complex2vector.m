@@ -9,8 +9,8 @@
 %           model           不输入 或者输入 '3d' 选择绘制模式
 %--------------------------------------------------------------------------
 %	例子:
-%   rt.complex2vector(randn(1,5) + 1j.*randn(1,5))                          %二维画图
-%	rt.complex2vector(randn(1,5) + 1j.*randn(1,5),'3d')                     %三维画图
+%   complex2vector(randn(1,5) + 1j.*randn(1,5))                          %二维画图
+%	complex2vector(randn(1,5) + 1j.*randn(1,5),'3d')                     %三维画图
 %--------------------------------------------------------------------------
 function complex2vector(points,model)
 if nargin == 1

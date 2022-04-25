@@ -22,7 +22,7 @@
 % 
 %   theta = 0;
 %   w_output = exp(1j.*2*pi*d.'*sind(theta)./lambda);
-%   [L,L_P,L_dB] = rt.L_norm_array_pattern(w_output,angle_axis);
+%   [L,L_P,L_dB] = L_norm_array_pattern(w_output,angle_axis);
 %--------------------------------------------------------------------------
 function L_norm_array_pattern(w,dd,lambda,angle_axis)
 N = numel(w);                                                               %阵元间距d = lambda/2

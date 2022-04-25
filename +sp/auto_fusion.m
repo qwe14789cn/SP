@@ -19,7 +19,7 @@
 %--------------------------------------------------------------------------
 %   例子:
 %   test = peaks>2;
-%   rt.auto_fusion(test,8)
+%   auto_fusion(test,8)
 %--------------------------------------------------------------------------
 function [output] = auto_fusion(input_data,conn)
 CC = bwconncomp(input_data,conn);
