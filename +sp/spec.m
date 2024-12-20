@@ -56,7 +56,7 @@ if isreal(sig)
     A = fft(sig,Nfft);
     A = A(1:Nfft/2);
     %----------------------------------------------------------------------
-    subplot(2,3,[1 2]);plot(f,mag2db(abs(A)));
+    subplot(3,3,[1 2]);plot(f,mag2db(abs(A)));
     if nargin == 1
         xlabel('¹éÒ»»¯ÆµÂÊ');ylabel('·ù¶È dB');grid on
         title('ÊµĞÅºÅ·ùÆµÏìÓ¦')
@@ -65,7 +65,7 @@ if isreal(sig)
         title(['²ÉÑùËÙÂÊ' num2str(value) ' ' unit 'ÊµĞÅºÅ·ùÆµÏìÓ¦'])
     end
     %----------------------------------------------------------------------
-    subplot(2,3,[4 5]);plot(f,rad2deg(angle(A)));
+    subplot(3,3,[4 5]);plot(f,rad2deg(angle(A)));
     if nargin == 1
         xlabel('¹éÒ»»¯ÆµÂÊ');ylabel('·ù¶È dB');grid on
         title('ÊµĞÅºÅÏàÆµÏìÓ¦')
@@ -76,7 +76,7 @@ if isreal(sig)
     %----------------------------------------------------------------------
 
 
-    subplot(2,3,[3 6]);
+    subplot(3,3,[3 6]);
     plot3(1:length(A),real(A),imag(A));grid on
     xlabel('µãÊı');ylabel('Êµ²¿');zlabel('Ğé²¿')
     axis([0 length(A) -max(abs(A(:))) max(abs(A(:))) -max(abs(A(:))) max(abs(A(:)))])
@@ -97,7 +97,7 @@ else                                                                        %¸´Ğ
     f = linspace(0,value-value/Nfft,Nfft);
     A = fft(sig,Nfft);
     %----------------------------------------------------------------------
-    subplot(2,3,[1 2]);plot(f,mag2db(abs(A)));
+    subplot(3,3,[1 2]);plot(f,mag2db(abs(A)));
 
     if nargin == 1
         xlabel('¹éÒ»»¯ÆµÂÊ');ylabel('·ù¶È dB');grid on
@@ -107,7 +107,7 @@ else                                                                        %¸´Ğ
         title(['²ÉÑùËÙÂÊ' num2str(value) ' ' unit '¸´ĞÅºÅ·ùÆµÏìÓ¦'])
     end
     %----------------------------------------------------------------------
-    subplot(2,3,[4 5]);plot(f,rad2deg(angle(A)));
+    subplot(3,3,[4 5]);plot(f,rad2deg(angle(A)));
     if nargin == 1
         xlabel('¹éÒ»»¯ÆµÂÊ');ylabel('·ù¶È dB');grid on
         title('ÊµĞÅºÅÏàÆµÏìÓ¦')
@@ -115,7 +115,7 @@ else                                                                        %¸´Ğ
         xlabel(['ÆµÂÊ' unit]);ylabel('ÏàÎ» ¡ã');ylim([-190 190]);grid on
         title(['²ÉÑùËÙÂÊ' num2str(value) ' ' unit '¸´ĞÅºÅÏàÆµÏìÓ¦'])
     end
-    subplot(2,3,[3 6]);
+    subplot(3,3,[3 6]);
     plot3(1:length(A),real(A),imag(A));grid on
     xlabel('µãÊı');ylabel('Êµ²¿');zlabel('Ğé²¿');
     axis([0 length(A) -max(abs(A(:))) max(abs(A(:))) -max(abs(A(:))) max(abs(A(:)))])
@@ -130,4 +130,16 @@ else                                                                        %¸´Ğ
         ang = rad2deg(angle(A(select)));
         title(['µã ' num2str(select) ' ÏàÎ»Îª ' num2str(ang) ' ¡ã']);
     end
+end
+if nargin <= 1
+    subplot(337);pspectrum(sig)
+    subplot(338);pspectrum(sig,'spectrogram');
+    subplot(339);pspectrum(sig,'persistence');
+else
+    subplot(337);pspectrum(sig,fs)
+    subplot(338);pspectrum(sig,fs,'spectrogram');
+    subplot(339);pspectrum(sig,fs,'persistence');
+end
+
+set(gcf,'outerposition',get(0,'screensize'));
 end
