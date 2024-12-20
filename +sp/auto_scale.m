@@ -1,5 +1,5 @@
 %--------------------------------------------------------------------------
-%   [output] = auto_scale(sig,AD_len)
+%   [output,output_ideal] = auto_scale(sig,AD_len,dBFS)
 %--------------------------------------------------------------------------
 %   功能:
 %   将输入数据的最大值按照ADC的位宽进行量化(常用于FPGA数据测试中)
@@ -7,16 +7,33 @@
 %   输入:
 %           sig                 需要被量化的信号信号                 
 %           AD_len              ADC位宽
+%           dBFS                信号的dBFS 默认是0
 %   输出:
 %           output              int型输出信号，并按照位宽量化
+%           output_ideal        理想信号
 %--------------------------------------------------------------------------
 %   例子:
 %   sig = [-10 -5 -3 -1 1 2 3 4 8];
 %   [output] = auto_scale(sig,10)
 %   output =
 %     -511  -256  -153   -51    51   102   153   204   409
+%   [output,output_ideal] = auto_scale(sig,10,0)
+%   output =
+%     -511  -256  -153   -51    51   102   153   204   409
+%   output_ideal =
+%  -511.0000 -255.5000 -153.3000  -51.1000   51.1000  102.2000  153.3000  204.4000  408.8000
+% [output,output_ideal] = sp.auto_scale(sig,10,-6)
+% output =
+%   -256  -128   -77   -26    26    51    77   102   205
+% output_ideal =
+%  -256.1067 -128.0533  -76.8320  -25.6107   25.6107   51.2213   76.8320  102.4427  204.8853
 %--------------------------------------------------------------------------
-function [output] = auto_scale(sig,AD_len)
+function [output,output_ideal] = auto_scale(sig,AD_len,dBFS)
+if nargin == 2
+    dBFS = 0;
+end
+A = db2mag(dBFS)*(2^(AD_len-1)-1);
 sig = sig./max(abs(sig));
-output = round(sig .* (2^(AD_len-1)-1));
+output_ideal = sig .* A;
+output = round(output_ideal);
 end
