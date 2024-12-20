@@ -1,68 +1,75 @@
 %--------------------------------------------------------------------------
-%   ad_analyzer(sig,fin,fs)
+%   ad_analyzer(sig,fs,N_bits)
 %--------------------------------------------------------------------------
 %   功能：
-%   ADC性能分析工具（仍然需要完善，功能不全）
+%   ADC性能分析工具
 %--------------------------------------------------------------------------
 %   输入:
 %           sig         输入信号
-%           fin         测试信号频率
 %           fs          采样速率
-%	输出：
-%           ENOB        有效位
+%           N_bits      ADC位宽  
 %--------------------------------------------------------------------------
 %   例子:
-%   ad_analyzer(sig,50e6,250e6)
+%   ad_analyzer(sig,fs,N_bits)
 %--------------------------------------------------------------------------
-function ad_analyzer(sig,fin,fs)
-N = length(sig);
-if mod(fin./fs*N,1)~=0
-    Nfft = floor(fin./fs*N)*fs./fin;
-    disp("Fin/Fs*信号点数不为整数，会产生频谱泄漏");
-    disp(['信号长度由 ' num2str(N) ' 修改为 ' num2str(Nfft) '并做 ' num2str(Nfft) ' 点FFT']);
-else
-    Nfft = N;
-end
-if fin>=1e6
-    disp("选择坐标Mhz")
-    f_x = "MHz";
-elseif fin>=1e3
-    disp("选择坐标KHz")
-    f_x = "KHz";
-end
-
-x = 0:fs/Nfft:fs/2 - fs/Nfft;                                               %频率横坐标
-f = fft(sig,Nfft);f = f(1:Nfft/2);
-a = abs(f);
-power = a.^2;                                                               %功率
-power_db = pow2db(power);
-power_db = power_db - max(power_db(:));                                     %dB
-
-fin_loc = fin./(fs/2)*(Nfft/2)*(0:floor(fs/2/fin))+1;                       %输入信号频点
-fin_loc(fin_loc>Nfft/2) = [];                                               %去掉频率范围外面的点
-
-all_power = sum(power);
-sig_power = power(fin_loc(1));
-noise_power = all_power - sum(power(fin_loc));
-snr = sig_power ./noise_power;
-snr_db = pow2db(snr);
-ENOB = (snr_db - 1.76)/6.02;
-
-figure(1)
-if f_x =="KHz"
-    x = x./1e3;
-elseif f_x =="MHz"
-    x = x./1e6;
-end
-plot(x,power_db,x(fin_loc(2)),power_db(fin_loc(2)),'o')
-text(x(fin_loc(2)),power_db(fin_loc(2)),...
-    {['Fin = ' num2str(fin./1e6) ' MHz'],['SNR = ' num2str(snr_db) 'dB']})
-grid on;
-xlabel(f_x);ylabel("dB")
-fprintf('信噪比SNR = %1.2f dB,',snr_db);
-fprintf('ENOB = %1.2f\n',ENOB);
-end
+function ad_analyzer(sig,fs,N_bits)
+sig = sig(:);
+len = length(sig);
+T = 1/fs;
+t_axis = (0:(len-1)).*T;
+[T_axis, fscale, xunits] =engunits(t_axis);
 
 
+rawsig = sig(:);
+sig = rawsig/2^(N_bits-1);
+
+% rmsSig = rms(sig);
+% rmsSigDBFS = mag2db(rmsSig);
+p2pSig = (max(sig)-min(sig))/2;
+p2pSigDBFS = mag2db(p2pSig);
+
+
+[SNR,Noisepow] = snr(sig,fs);
+[SFDR,spurpow,spurfreq] = sfdr(sig,fs);
+[THD,harmpow,harmfreq] = thd(sig,fs);thdPercent = db2pow(THD)*100;
+[SINAD,totdistpow] = sinad(sig,fs);
+ENOB = (SINAD-1.76 - p2pSigDBFS) / 6.02;
+f = figure(1);
+f.Position = get(0,'ScreenSize');
+subplot(3,2,[1 2]);
+plot(T_axis,rawsig);grid on;xlabel(['时间/' xunits 's']);ylabel('幅度')
+ylim([min(rawsig)-eps max(rawsig)+eps].*1.2)
+
+subplot(323);snr(sig,fs);
+subplot(324);sfdr(sig,fs);
+subplot(325);thd(sig,fs);
+subplot(326);sinad(sig,fs);
+
+disp('--------------------------------------------------------------------')
+fprintf(['\tADC位数\t\t\tNOB\t\t\t= ' num2str(N_bits) '\t\tBits\n\n']);
+fprintf(['\t满量程\t\t\tMaxScale\t= ' num2str(2^(N_bits-1)-1) '\n']);
+fprintf(['\t\t\t\t\tMinScale\t= ' num2str(-2^(N_bits-1)) '\n\n']);
+fprintf(['\t信号峰峰值\t\tMaxPeak\t\t= ' num2str(max(rawsig)) '\n']);
+fprintf(['\t\t\t\t\tMinPeak\t\t= ' num2str(min(rawsig)) '\n']);
+fprintf(['\t峰峰值占比\t\tPP Scale\t= ' num2str(p2pSig*100) '%%\t\t\t' num2str(p2pSigDBFS) '\tdBFS\n\n']);
+fprintf(['\t信号频率\t\t\tSig freq\t= ' num2str(harmfreq(1)) '\tHz\n']);
+disp('--------------------------------------------------------------------')
+fprintf(['\t信噪比\t\t\tSNR \t\t= ' num2str(SNR) '\tdB\n']);
+fprintf(['\t无杂散动态范围\t\tSFDR\t\t= ' num2str(SFDR) '\tdB\n']);
+fprintf(['\t总谐波失真\t\tTHD\t\t\t= ' num2str(THD) '\tdBc\t\t' num2str(thdPercent) '%%\n']);
+fprintf(['\t信噪比和失真\t\tSINAD\t\t= ' num2str(SINAD) '\tdBc\n']);
+fprintf(['\t有效位数\t\t\tENOB\t\t= ' num2str(ENOB) '\tBits\n']);
+disp('--------------------------------------------------------------------')
+fprintf(['\t噪声功率\t\t\tNoisePower\t= ' num2str(Noisepow) '\tdB\n\n']);
+
+fprintf(['\t最大杂散功率\t\tSpurPower\t= ' num2str(spurpow) '\tdB\n']);
+fprintf(['\t最大杂散频率\t\tSpurFreq\t= ' num2str(spurfreq) '\tHz\n\n']);
+
+T = table((2:length(harmfreq))',harmfreq(2:end),harmpow(2:end));
+T.Properties.VariableNames = {'序号','谐波频率(Hz)','谐波功率(dB)'};
+disp(T)
+
+fprintf(['\t噪声+谐波总功率\tNoise+harm\t= ' num2str(totdistpow') '\tdB\n']);
+disp('--------------------------------------------------------------------')
 
 
