@@ -11,85 +11,123 @@
 %           select          选择点输出相位值       
 %--------------------------------------------------------------------------
 %   例子：
+%   spec(sig)
 %   spec(sig,fs)                    不指定fft点数
 %   spec(sig,fs,nfft)               指定fft点数
+%   spec(sig,fs,[],select)          输出指定点数相位值
 %   spec(sig,fs,nfft,select)        输出指定点数相位值
 %--------------------------------------------------------------------------
 function spec(sig,fs,Nfft,select)
-if nargin <=2
+sig = double(sig(:));
+
+if nargin == 1
+    fs = [];                                                                %归一化频率
+    N2 = nextpow2(length(sig));
+    Nfft = 2^N2;
+elseif nargin == 2
     N2 = nextpow2(length(sig));
     Nfft = 2^N2;
 end
-disp(['信号长度为 -> ' num2str(numel(sig)) ' FFT点数为 -> ' num2str(Nfft)]);
-f1 = figure(1);
-f1.Position = [95 450 1671 494];
-if isreal(sig)==1                                                           %实信号分析，单边功率谱
-    f = linspace(0,fs/2-fs/Nfft,Nfft/2);
+if isempty(Nfft)
+    Nfft = 2^nextpow2(length(sig));
+end
+
+if isempty(fs)
+    fs = 1;
+end
+
+%   单位转换
+[value,~,unit] = signalwavelet.internal.convenienceplot.getFrequencyEngUnits(fs);
+disp('--------------------')
+if isreal(sig)
+    disp('实信号:')
+else
+    disp('复信号:')
+end
+
+disp([' length -> ' num2str(numel(sig))])
+disp([' NFFT   -> ' num2str(Nfft)]);
+disp('--------------------')
+%--------------------------------------------------------------------------
+%   如果是实信号
+%--------------------------------------------------------------------------
+if isreal(sig)
+    f = linspace(0,value/2-value/Nfft,Nfft/2);
     A = fft(sig,Nfft);
     A = A(1:Nfft/2);
-    subplot(231);plot(f,pow2db(abs(A).^2));
-    xlabel('频率 hz');ylabel('幅度 dB');grid on
-    title(['采样速率' num2str(fs/1e6) ' Mhz 实信号幅频响应'])
+    %----------------------------------------------------------------------
+    subplot(2,3,[1 2]);plot(f,mag2db(abs(A)));
+    if nargin == 1
+        xlabel('归一化频率');ylabel('幅度 dB');grid on
+        title('实信号幅频响应')
+    else
+        xlabel(['频率' unit]);ylabel('幅度 dB');grid on
+        title(['采样速率' num2str(value) ' ' unit '实信号幅频响应'])
+    end
+    %----------------------------------------------------------------------
+    subplot(2,3,[4 5]);plot(f,rad2deg(angle(A)));
+    if nargin == 1
+        xlabel('归一化频率');ylabel('幅度 dB');grid on
+        title('实信号相频响应')
+    else
+        xlabel(['频率' unit]);ylabel('幅度 dB');grid on
+        title(['采样速率' num2str(value) ' ' unit '实信号相频响应'])
+    end
+    %----------------------------------------------------------------------
 
-    subplot(232);plot(pow2db(abs(A).^2));
-    xlabel('点数');ylabel('幅度 dB');grid on
-    title(['采样速率' num2str(fs/1e6) ' Mhz 实信号幅频响应'])
 
-    subplot(234);plot(f,rad2deg(angle(A)));
-    xlabel('频率 hz');ylabel('相位 °');ylim([-180 180]);grid on
-    title(['采样速率' num2str(fs/1e6) ' Mhz 实信号相频响应'])
-
-    subplot(235);plot(rad2deg(angle(A)));
-    xlabel('点数');ylabel('相位 °');ylim([-180 180]);grid on
-    title(['采样速率' num2str(fs/1e6) ' Mhz 实信号相频响应'])
-
-    subplot(133);
+    subplot(2,3,[3 6]);
     plot3(1:length(A),real(A),imag(A));grid on
     xlabel('点数');ylabel('实部');zlabel('虚部')
-    axis([0 length(A) -max(abs(A)) max(abs(A)) -max(abs(A)) max(abs(A))])
+    axis([0 length(A) -max(abs(A(:))) max(abs(A(:))) -max(abs(A(:))) max(abs(A(:)))])
     %----------------------------------------------------------------------
     if nargin <=3                                                           %如果不输入 自动寻找最大值
-        select = find(A==max(A));
+        select = find(A==max(A(:)));
         ang = rad2deg(angle(A(select)));
+        title(['频点 ' num2str(f(select)) unit ' 相位为 ' num2str(ang) ' °']);
     end
-    if nargin ==4                                                           %如果不输入 自动寻找最大值
+    if nargin == 4                                                          %如果不输入 自动寻找最大值
         ang = rad2deg(angle(A(select)));
+        title(['点 ' num2str(select) ' 相位为 ' num2str(ang) ' °']);
     end
-    title(['点 ' num2str(select) ' 相位为 ' num2str(ang) ' °']);
-    %----------------------------------------------------------------------
+%--------------------------------------------------------------------------
+%   如果是复信号
+%--------------------------------------------------------------------------
 else                                                                        %复信号分析，单边功率谱
-    f = linspace(0,fs-fs/Nfft,Nfft);
+    f = linspace(0,value-value/Nfft,Nfft);
     A = fft(sig,Nfft);
-    subplot(231);plot(f,pow2db(abs(A).^2));
-    xlabel('频率 hz');ylabel('幅度 dB');grid on
-    title(['采样速率' num2str(fs/1e6) ' Mhz 复信号幅频响应'])
+    %----------------------------------------------------------------------
+    subplot(2,3,[1 2]);plot(f,mag2db(abs(A)));
 
-    subplot(232);plot(pow2db(abs(A).^2));
-    xlabel('点数');ylabel('幅度 dB');grid on
-    title(['采样速率' num2str(fs/1e6) ' Mhz 信号幅频响应'])
-
-    subplot(234);plot(f,rad2deg(angle(A)));
-    xlabel('频率 hz');ylabel('相位 °');ylim([-180 180]);grid on
-    title(['采样速率' num2str(fs/1e6) ' Mhz 实信号相频响应'])
-
-    subplot(235);plot(rad2deg(angle(A)));
-    xlabel('点数');ylabel('相位 °');ylim([-180 180]);grid on
-    title(['采样速率' num2str(fs/1e6) ' Mhz 实信号相频响应'])
-
-    subplot(133);
+    if nargin == 1
+        xlabel('归一化频率');ylabel('幅度 dB');grid on
+        title('复信号幅频响应')
+    else
+        xlabel(['频率' unit]);ylabel('幅度 dB');grid on
+        title(['采样速率' num2str(value) ' ' unit '复信号幅频响应'])
+    end
+    %----------------------------------------------------------------------
+    subplot(2,3,[4 5]);plot(f,rad2deg(angle(A)));
+    if nargin == 1
+        xlabel('归一化频率');ylabel('幅度 dB');grid on
+        title('实信号相频响应')
+    else
+        xlabel(['频率' unit]);ylabel('相位 °');ylim([-190 190]);grid on
+        title(['采样速率' num2str(value) ' ' unit '复信号相频响应'])
+    end
+    subplot(2,3,[3 6]);
     plot3(1:length(A),real(A),imag(A));grid on
     xlabel('点数');ylabel('实部');zlabel('虚部');
-    axis([0 length(A) -max(abs(A)) max(abs(A)) -max(abs(A)) max(abs(A))])
+    axis([0 length(A) -max(abs(A(:))) max(abs(A(:))) -max(abs(A(:))) max(abs(A(:)))])
     %----------------------------------------------------------------------
     if nargin <=3                                                           %如果不输入 自动寻找最大值
-        select = find(A==max(A));
+        select = find(A==max(A(:)));
         ang = rad2deg(angle(A(select)));
+        title(['频点 ' num2str(f(select)) unit ' 相位为 ' num2str(ang) ' °']);
     end
 
-    if nargin ==4
+    if nargin == 4
         ang = rad2deg(angle(A(select)));
+        title(['点 ' num2str(select) ' 相位为 ' num2str(ang) ' °']);
     end
-    title(['最大值对应 -> 点 ' num2str(select) ' 相位为 ' num2str(ang) ' °']);
-    %----------------------------------------------------------------------
-
 end

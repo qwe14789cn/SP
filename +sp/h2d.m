@@ -19,6 +19,7 @@
 function [dataout] = h2d(datain,N_bit)
 dataout = hex2dec(datain);
 dataout(dataout>=2^(N_bit-1)) = dataout(dataout>=2^(N_bit-1))-2^N_bit;
+end
 
 
 

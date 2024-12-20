@@ -1,5 +1,5 @@
 %--------------------------------------------------------------------------
-%   [dataout] = read_bin(file_name,file_type,mode_bl)
+%   [dataout] = read_bin(file_name,file_type,mode_bl,N)
 %--------------------------------------------------------------------------
 %   功能:
 %   读取bin文件数据
@@ -12,22 +12,30 @@
 %                                                 'l' 小端(常用)
 %                                                 's' 大端64bit
 %                                                 'a' 小端64bit
-%   output:
+%           N                           读取长度
+%   输出:
 %           output                     输出读取数据结果
 %--------------------------------------------------------------------------
 %   例子:   
+%   read_bin('1.bin','int8')
 %   read_bin('1.bin','int8','b')
-% ans =
-%      1
-%      2
-%      3
-%      4
-%      5
+%   read_bin('1.bin','int8','b',2)
+%   read_bin('1.bin','int8',[],2)
 %--------------------------------------------------------------------------
-function [output] = read_bin(file_name,file_type,mode_bl)
-if nargin == 2
+function [output] = read_bin(file_name,file_type,mode_bl,N)
+if nargin <= 2
     mode_bl = 'n';
 end
-f = fopen(file_name,'r');
-output = fread(f,file_type,mode_bl);
-fclose(f);
+if isempty(mode_bl)
+    mode_bl = 'n';
+end
+if nargin <= 3                                                              %数据全读取
+    f = fopen(file_name,'r');
+    output = fread(f,file_type,mode_bl);
+    fclose(f);
+else                                                                        %数据指定长度
+    f = fopen(file_name,'r');
+    output = fread(f,N,file_type,mode_bl);
+    fclose(f);
+
+end

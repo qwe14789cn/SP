@@ -17,7 +17,7 @@
 %   例子:
 %   a = [1 2 3;4 5 6;7 8 9];
 %   write_bin(a,'a.bin')
-%   write_bin(a,'a.bin','l')
+%   write_bin(a,'a.bin','int16','l')
 %--------------------------------------------------------------------------
 function write_bin(data_name,file_name,file_type,mode_bl)
 if nargin == 3
