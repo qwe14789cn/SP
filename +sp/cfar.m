@@ -1,5 +1,5 @@
 %--------------------------------------------------------------------------
-%   [detected,th] = cfar(sig,K,D,shape,option)
+%   [detected,th] = cfar(sig,a,D,shape,option)
 %--------------------------------------------------------------------------
 %   功能：
 %   奈曼皮尔逊检测器，一维恒虚警检测器，在回波信号中检测点目标
@@ -14,9 +14,9 @@
 %   不支持    WCA-CFAR(weighted cell average)
 %--------------------------------------------------------------------------
 %   输入:
-%   sig         数据 列表示距离维 注意输入信号为 功率信号
-%   K         	方差
-%   D           直流
+%   sig_pow     数据 列表示距离维 注意输入信号为 功率信号
+%   a         	缩放因子
+%   D           直流偏置
 %   shape       训练单元 守护单元 判决点 守护单元 训练单元
 %   输出:
 %   detected    判决平面
@@ -27,7 +27,7 @@
 %   [detected,th] = cfar(sig,0.5,0,[8 3 1 3 8],'so')
 %   [detected,th] = cfar(sig,0.5,0,[8 3 1 3 8],'go')
 %--------------------------------------------------------------------------
-function [detected,th] = cfar(sig,K,D,shape,option)
+function [detected,th] = cfar(sig,a,D,shape,option)
 if nargin <=4
     option = 'CA';
 end
@@ -61,7 +61,7 @@ for jdx = 1:J
 %             case 'wca'
 %                 Pow = a*powL+b*powR;
         end
-        th(idx,jdx) = K.*Pow+D;
+        th(idx,jdx) = a.*Pow+D;
     end
     th(1:tL+gL,jdx) = th(tL + gL + 1,jdx);
     th(I-tR-gR:end,jdx) = th(I-tR-gR,jdx);
