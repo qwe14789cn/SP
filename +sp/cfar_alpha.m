@@ -19,5 +19,5 @@
 function alpha = cfar_alpha(pfa,N)
 disp("sum(Pn) x alpha = T")
 disp("calculate alpha...")
-alpha = (pfa.^(-1./N)-1);
+alpha = N*(pfa.^(-1./N)-1);
 end
