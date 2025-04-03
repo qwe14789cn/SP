@@ -1,24 +1,24 @@
 %--------------------------------------------------------------------------
 %   [snr] = radar_eq(pt,fc,G,rcs,bw,nf,L,range)
 %--------------------------------------------------------------------------
-%   ¹¦ÄÜ£º
-%   À×´ï·½³Ì
+%   åŠŸèƒ½ï¼š
+%   é›·è¾¾æ–¹ç¨‹
 %--------------------------------------------------------------------------
-%   ÊäÈë:
-%           pt              ·åÖµ¹¦ÂÊ        W
-%           fc              ÖÐÐÄÆµÂÊ        Hz
-%           G               ÌìÏßÔöÒæ        dB
-%           rcs             À×´ï·´Éä½ØÃæ»ý  m^2
-%           bw              ÐÅºÅ´ø¿í        Hz
-%           nf              ÔëÉùÏµÊý        dB
-%           L               À×´ïËðºÄ        dB
-%           range           Ä¿±ê¾àÀë        m
-%   Êä³ö£º
-%           snr             ÐÅÔë±È          dB
+%   è¾“å…¥:
+%           pt              å³°å€¼åŠŸçŽ‡        W
+%           fc              ä¸­å¿ƒé¢‘çŽ‡        Hz
+%           G               å¤©çº¿å¢žç›Š        dB
+%           rcs             é›·è¾¾åå°„æˆªé¢ç§¯  m^2
+%           bw              ä¿¡å·å¸¦å®½        Hz
+%           nf              å™ªå£°ç³»æ•°        dB
+%           L               é›·è¾¾æŸè€—        dB
+%           range           ç›®æ ‡è·ç¦»        m
+%   è¾“å‡ºï¼š
+%           snr             ä¿¡å™ªæ¯”          dB
 %--------------------------------------------------------------------------
-%   Àý×Ó£º
-%   ·åÖµ¹¦ÂÊ1.5MW   ÖÐÐÄÆµÂÊ5.6GHz  ÌìÏßÔöÒæ45dB    À×´ïËðºÄ6dB
-%   ÔëÉùÏµÊý3dB     À×´ï´ø¿í5MHz    ×îÐ¡Ì½²â¾àÀë25km  ×î´óÌ½²â¾àÀë165km
+%   ä¾‹å­ï¼š
+%   å³°å€¼åŠŸçŽ‡1.5MW   ä¸­å¿ƒé¢‘çŽ‡5.6GHz  å¤©çº¿å¢žç›Š45dB    å™ªå£°ç³»æ•°3dB 
+%   é›·è¾¾æŸè€—6dB    é›·è¾¾å¸¦å®½5MHz    æœ€å°æŽ¢æµ‹è·ç¦»25km  æœ€å¤§æŽ¢æµ‹è·ç¦»165km
 %   radar_eq(1.5e6,5.6e9,45,0.1,5e6,3,6,25e3)
 %--------------------------------------------------------------------------
 function [snr] = radar_eq(pt,fc,G,rcs,bw,nf,L,range)
@@ -27,10 +27,10 @@ pt_db  = pow2db(pt);
 lambda = c/fc;
 lambda_sqdb = pow2db(lambda.^2);
 rcs_db      = pow2db(rcs);
-four_pi_db  = pow2db((4*pi).^3);
 
-k_db      = pow2db(1.38e-23);
-T_db      = pow2db(290);
+four_pi_db  = pow2db((4*pi).^3);
+k_db      = pow2db(1.38e-23);                                               %çŽ»å°”å…¹æ›¼å¸¸æ•°
+T_db      = pow2db(290);                                                    %290Kä¸‹ç³»ç»Ÿå™ªå£°æ¸©åº¦
 bw_db     = pow2db(bw);
 range_db  = pow2db(range.^4);
 A      = pt_db + G + G +lambda_sqdb + rcs_db;
