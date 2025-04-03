@@ -16,5 +16,7 @@
 %       1   1   0   1
 %--------------------------------------------------------------------------
 function bin_array = b2array(str)
-bin_array = logical(str2num(char(str)')');
+for idx = 1:size(str,1)
+    bin_array(idx,:) = logical(str2num(char(str(idx,:))')');
+end
 end
