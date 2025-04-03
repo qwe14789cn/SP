@@ -17,7 +17,7 @@
 %--------------------------------------------------------------------------
 function [T_axis,F_axis] = ifm(sig,fs,window_len)
 if nargin <= 2
-	window_len = 1
+	window_len = 1;
 end
 T = 1/fs;
 fai_hat = angle([sig;0]./[0;sig]);                                          %复数除法得到夹角,不用解缠绕
